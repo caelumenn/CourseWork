@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void push_to_file(int*** matrix,int count, int length, int width, string filename) {
+void push_to_file(int*** matrix,int& count, int& length, int& width, string filename) {
 	ofstream myfile(filename, ios::app);
 	if (myfile.is_open()) {
 		for (int i = 0; i < count; i++) {
@@ -20,7 +20,7 @@ void push_to_file(int*** matrix,int count, int length, int width, string filenam
 	myfile.close();
 }
 
-int*** pull_from_file(string filename, const int length, const int width) {
+int*** pull_from_file(string filename, int& length, int& width) {
 	ifstream myfile(filename);
 	int count = 0;
 	myfile >> count;
@@ -44,15 +44,15 @@ int*** pull_from_file(string filename, const int length, const int width) {
 	return temp;
 }
 
-int main() {
+/*int main() {
 	int a[2][2] = {0,1,2,3};
 	int b[3][3] = { 3,3,3,3,3,3,3,3,3 };
 	int c[4][4] = { 4, 4, 4, 4, 4, 4, 4,4 ,4 ,4, 4,4, 4,4,4,4 };
 	int*** d;
 	string filename = "example.txt";
-	/*push_to_file(*a, 2, 2, filename);
+	push_to_file(*a, 2, 2, filename);
 	push_to_file(*b, 3, 3, filename);
-	push_to_file(*c, 4, 4, filename);*/
+	push_to_file(*c, 4, 4, filename);
 	d = pull_from_file(filename, 2, 2);
 	push_to_file(d, 1, 2, 2, filename);
 	for (int i = 0; i < 1; i++) {
@@ -64,5 +64,5 @@ int main() {
 	}
 	delete[] d;
 	return 0;
-}
+}*/
 
