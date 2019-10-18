@@ -5,7 +5,7 @@ int main() {
 	Puzzle* puzzle = new Puzzle();
 	puzzle->set_puzzle_x(x);
 	puzzle->set_puzzle_y(y);
-	puzzle->set_max(15);
+	puzzle->set_max(16);
 	puzzle->input_puzzle();
 	puzzle->print_puzzle();
 	return 0;

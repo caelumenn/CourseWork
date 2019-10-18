@@ -56,7 +56,7 @@ int** Puzzle::get_puzzle_blocks() {
 	return this->puzzle_blocks;
 }
 
-bool input_check(int **arry, int x, int y, int check_num) {
+bool repeat_check(int **arry, int x, int y, int check_num) {
 	for (int i = 0; i < y; i++) {
 		for (int j = 0; j < x; j++) {
 			if (check_num == arry[i][j]) {
@@ -78,7 +78,8 @@ void Puzzle::input_puzzle() {
 			cout << "Please input a num from 1 to " << this->get_max() << endl;
 			cin >> input;
 			if (cin.fail()) {
-				cin >> ws;
+				cin.clear(); 
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				cout << "Wrong! Please input a num." << endl;
 				j--;
 			}
@@ -97,8 +98,8 @@ void Puzzle::input_puzzle() {
 				}
 			}
 		}
-		this->set_puzzle_blocks(puzzle);
 	}
+	this->set_puzzle_blocks(puzzle);
 }
 
 void Puzzle::print_puzzle() {
@@ -109,4 +110,8 @@ void Puzzle::print_puzzle() {
 		}
 		cout << endl;
 	}
+}
+
+void Puzzle::random_generate() {
+
 }
