@@ -82,7 +82,7 @@ void Puzzle::input_puzzle() {
 		puzzle[i] = new int[this->puzzle_x];
 	}
 	for (int i = 0; i < this->puzzle_y; i++) {
-		for (int j = 0; j < this->puzzle_x; j++) {
+		for (int j = 0; j < this->puzzle_x ; j++) {
 			cout << "Please input a num from 1 to " << this->get_max() << endl;
 			cin >> input;
 			if (cin.fail()) {

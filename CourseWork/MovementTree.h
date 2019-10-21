@@ -13,7 +13,5 @@ public:
 	~MovementTree();
 	void insert_movement();
 	void print_tree();
-	void terminate_tree();
-
 };
 
