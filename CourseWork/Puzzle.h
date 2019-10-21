@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 using namespace std;
+enum  move_towards {up,down,left,right};
 class Puzzle {
 public:
 	Puzzle();
@@ -19,6 +20,8 @@ public:
 	int get_move_times();
 	void set_puzzle_blocks(int** init);
 	int** get_puzzle_blocks();
+	void set_move(move_towards move);
+	move_towards get_move();
 
 	int count_continuous_row();
 	int count_continuous_column();
@@ -29,7 +32,7 @@ public:
 	void random_generate();
 	void push_to_file();
 	void pull_from_file();
-	void move();
+	void movement();
 protected:
 	int puzzle_x;
 	int puzzle_y;
@@ -40,7 +43,6 @@ protected:
 	int** puzzle_blocks;
 	string solution_file;
 	string config_file;
-	string move_towards;
-	
+	move_towards move;
 };
 

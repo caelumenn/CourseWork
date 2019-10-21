@@ -1,16 +1,16 @@
 #pragma once
 #include "Puzzle.h"
-class Tree
+class MovementTree
 {
 private:
-	Tree* up;
-	Tree* down;
-	Tree* right;
-	Tree* left;
+	MovementTree* up_child;
+	MovementTree* down_child;
+	MovementTree* right_child;
+	MovementTree* left_child;
 	Puzzle* puzzle;
 public:
-	Tree();
-	~Tree();
+	MovementTree(Puzzle* puzzle);
+	~MovementTree();
 	void insert_movement();
 	void print_tree();
 	void terminate_tree();

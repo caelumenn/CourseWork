@@ -9,7 +9,9 @@ Puzzle::Puzzle():
 	max(0),
 	move_times(0),
 	puzzle_blocks(nullptr),
-	solution_file("solution_file.txt"),config_file("15-config.txt"){}
+	solution_file("solution_file.txt"),config_file("15-config.txt"),
+	move(up)
+	{}
 Puzzle::~Puzzle() {
 	delete[] puzzle_blocks;
 }
@@ -54,6 +56,12 @@ void Puzzle::set_puzzle_blocks(int** init) {
 }
 int** Puzzle::get_puzzle_blocks() {
 	return this->puzzle_blocks;
+}
+void Puzzle::set_move(move_towards move){
+	this->move = move;
+}
+move_towards Puzzle::get_move() {
+	return this->move;
 }
 
 bool repeat_check(int **arry, int x, int y, int check_num) {
