@@ -1,15 +1,4 @@
-#include "MovementTree.h"
-
-MovementTree::MovementTree(Puzzle& puzzle):
-	up_child(nullptr),down_child(nullptr),
-	right_child(nullptr),left_child(nullptr),
-	puzzle(puzzle)
-{}
-
-MovementTree::~MovementTree() {
-}
-
-void MovementTree::insert_movement() {
+/*void MovementTree::insert_movement() {
 	this->up_child = new MovementTree(puzzle);
 	this->up_child->puzzle.move_up();
 	this->up_child->puzzle.print_puzzle();
@@ -37,4 +26,4 @@ void MovementTree::insert_movement() {
 		delete this->down_child;
 	if (pos_y == this->puzzle.get_puzzle_y() - 1) //can't go right
 		delete this->right_child;
-}
+}*/

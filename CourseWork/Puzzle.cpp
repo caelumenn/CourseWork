@@ -10,8 +10,24 @@ Puzzle::Puzzle():
 	move_times(0),
 	puzzle_blocks(nullptr),
 	solution_file("solution_file.txt"),config_file("15-config.txt"),
-	move(up)
+	move(up),
+	up_child(nullptr),
+	down_child(nullptr),
+	left_child(nullptr),
+	right_child(nullptr)
 	{}
+Puzzle::Puzzle(const Puzzle& p) {
+	this->puzzle_x = p.puzzle_x;
+	this->puzzle_y = p.puzzle_y;
+	this->pos_x = p.pos_x;
+	this->pos_y = p.pos_y;
+	this->move_times = p.move_times;
+	this->max = p.max;
+	this->set_puzzle_blocks(p.puzzle_blocks);
+	this->solution_file = p.solution_file;
+	this->config_file = p.config_file;
+	this->move = p.move;
+}
 Puzzle::~Puzzle() {
 	delete[] puzzle_blocks;
 }
@@ -52,7 +68,15 @@ int Puzzle::get_move_times() {
 	return this->move_times;
 }
 void Puzzle::set_puzzle_blocks(int** init) {
-	this->puzzle_blocks = init;
+	this->puzzle_blocks = new int* [this->puzzle_y];
+	for (int i = 0; i < this->puzzle_y; i++) {
+		this->puzzle_blocks[i] = new int[this->puzzle_x];
+	}
+	for (int i = 0; i < this->puzzle_y; i++) {
+		for (int j = 0; j < this->puzzle_x; j++) {
+			this->puzzle_blocks[i][j] = init[i][j];
+		}
+	}
 }
 int** Puzzle::get_puzzle_blocks() {
 	return this->puzzle_blocks;

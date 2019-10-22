@@ -3,8 +3,14 @@
 using namespace std;
 enum  move_towards {up,down,left,right};
 class Puzzle {
-public:
+public:	
+	Puzzle* up_child;
+	Puzzle* down_child;
+	Puzzle* right_child;
+	Puzzle* left_child;
+
 	Puzzle();
+	Puzzle(const Puzzle& p);
 	~Puzzle();
 	void set_puzzle_x(int& puzzle_x);
 	int get_puzzle_x();
@@ -36,6 +42,7 @@ public:
 	int count_reverse_continuous_column();	
 	void push_to_file();
 	void pull_from_file();
+
 protected:
 	int puzzle_x;
 	int puzzle_y;
@@ -43,13 +50,10 @@ protected:
 	int pos_y;
 	int move_times;
 	int max;
+
 	int** puzzle_blocks;
+
 	string solution_file;
 	string config_file;
 	move_towards move;
-	Puzzle* up_child;
-	Puzzle* down_child;
-	Puzzle* right_child;
-	Puzzle* left_child;
 };
-
