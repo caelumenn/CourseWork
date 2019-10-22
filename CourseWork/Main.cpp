@@ -20,8 +20,10 @@ int main() {
 	cout << endl;
 	puzzle.up_child->move_up();
 	puzzle.up_child->print_puzzle();
+	puzzle.up_child->random_generate();
+	puzzle.up_child->print_puzzle();
 	cout << endl;
-	puzzle.print_puzzle();
+	
 
 	/*
 	int a = puzzle->count_continuous_row();
