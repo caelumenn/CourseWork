@@ -1,8 +1,5 @@
 #include "Puzzle.h"
-#include <fstream>
-#include <iostream>
 
-using namespace std;
 Puzzle::Puzzle():
 	puzzle_x(0),puzzle_y(0),
 	pos_x(0), pos_y(0),
@@ -145,7 +142,32 @@ void Puzzle::print_puzzle() {
 }
 
 void Puzzle::random_generate() {
-
+	unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+	vector<int> random;
+	
+	for (int i = 1; i <= max; i++) {
+		random.push_back(i);
+	}
+	shuffle(random.begin(), random.end(), default_random_engine(seed));
+	
+	int** puzzle = new int* [this->puzzle_y];
+	for (int i = 0; i < this->puzzle_y; i++) {
+		puzzle[i] = new int[this->puzzle_x];
+	}
+	
+	auto k = random.begin();
+	for (int i = 0; i < this->puzzle_y; i++) {
+		for (int j = 0; j < this->puzzle_x; j++) {
+				if (i == this->puzzle_y - 1 && j == this->puzzle_x - 1) {
+					puzzle[i][j] = 0;
+				}
+				else {
+					puzzle[i][j] = *k;
+					k++;
+				}
+			}
+	}
+	this->set_puzzle_blocks(puzzle);
 }
 
 int Puzzle::count_continuous_row() {

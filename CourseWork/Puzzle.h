@@ -1,5 +1,10 @@
 #pragma once
+#include <fstream>
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <random>      
+#include <chrono> 
 using namespace std;
 enum  move_towards {up,down,left,right};
 class Puzzle {

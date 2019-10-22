@@ -7,8 +7,8 @@ int main() {
 	puzzle.set_puzzle_y(y);
 	puzzle.set_pos_x(3);
 	puzzle.set_pos_y(3);
-	puzzle.set_max(16);
-	puzzle.input_puzzle();
+	puzzle.set_max(20);
+	puzzle.random_generate();
 	puzzle.print_puzzle();
 	cout << endl;
 	puzzle.move_up();
