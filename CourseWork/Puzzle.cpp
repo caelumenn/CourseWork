@@ -27,13 +27,13 @@ void Puzzle::set_puzzle_y(int& puzzle_y) {
 int Puzzle::get_puzzle_y() {
 	return this->puzzle_y;
 }
-void Puzzle::set_pos_x(int& pos_x) {
+void Puzzle::set_pos_x(int pos_x) {
 	this->pos_x = pos_x;
 }
 int Puzzle::get_pos_x() {
 	return this->pos_x;
 }
-void Puzzle::set_pos_y(int& pos_y){
+void Puzzle::set_pos_y(int pos_y){
 	this->pos_y = pos_y;
 }
 int Puzzle::get_pos_y() {
@@ -114,7 +114,7 @@ void Puzzle::print_puzzle() {
 	int** puzzle = this->get_puzzle_blocks();
 	for (int i = 0; i < this->puzzle_y; i++) {
 		for (int j = 0; j < this->puzzle_x; j++) {
-			cout << puzzle[i][j] << " "; 
+			cout << puzzle[i][j] << "\t"; 
 		}
 		cout << endl;
 	}
@@ -122,4 +122,152 @@ void Puzzle::print_puzzle() {
 
 void Puzzle::random_generate() {
 
+}
+
+int Puzzle::count_continuous_row() {
+	int** puzzle = this->get_puzzle_blocks();
+	int continuous_row = 0;
+	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+		int count = 0;
+		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
+			if (puzzle[i][j + 1] - puzzle[i][j] == 1) {
+				count++;
+				if (count >= 3) {
+					continuous_row++;
+				}
+			}
+			else {
+				count--;
+			}
+		}
+	}
+	return continuous_row;
+}
+
+int Puzzle::count_reverse_continuous_row() {
+	int** puzzle = this->get_puzzle_blocks();
+	int continuous_reverse_row = 0;
+	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+		int count = 0;
+		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
+			if (puzzle[i][j + 1] - puzzle[i][j] == -1) {
+				count++;
+				if (count >= 3) {
+					continuous_reverse_row++;
+				}
+			}
+			else {
+				count--;
+			}
+		}
+	}
+	return continuous_reverse_row;
+}
+
+int Puzzle::count_continuous_column() {
+	int** puzzle = this->get_puzzle_blocks();
+	int continuous_column = 0;
+	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+		int count = 0;
+		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
+			if (puzzle[j+1][i] - puzzle[j][i] == 1) {
+				count++;
+				if (count >= 3) {
+					continuous_column++;
+				}
+			}
+			else {
+				count--;
+			}
+		}
+	}
+	return continuous_column;
+}
+
+int Puzzle::count_reverse_continuous_column() {
+	int** puzzle = this->get_puzzle_blocks();
+	int continuous_reverse_column = 0;
+	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+		int count = 0;
+		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
+			if (puzzle[j + 1][i] - puzzle[j][i] == -1) {
+				count++;
+				if (count >= 3) {
+					continuous_reverse_column++;
+				}
+			}
+			else {
+				count--;
+			}
+		}
+	}
+	return continuous_reverse_column;
+}
+
+void Puzzle::move_up(){
+	int** puzzle = this->get_puzzle_blocks();
+	int temp = 0;
+	pos_x = this->get_pos_x();
+	pos_y = this->get_pos_y();
+	int move_times = this->get_move_times();
+	move_times++;
+
+	temp = puzzle[pos_x - 1][pos_y];
+	puzzle[pos_x - 1][pos_y] = puzzle[pos_x][pos_y];
+	puzzle[pos_x][pos_y] = temp;
+
+	this->set_pos_x(pos_x - 1);
+	this->set_move_times(move_times);
+	this->set_puzzle_blocks(puzzle);
+}
+
+void Puzzle::move_down() {
+	int** puzzle = this->get_puzzle_blocks();
+	int temp = 0;
+	int pos_x = this->get_pos_x();
+	int pos_y = this->get_pos_y();
+	int move_times = this->get_move_times();
+	move_times++;
+
+	temp = puzzle[pos_x + 1][pos_y];
+	puzzle[pos_x + 1][pos_y] = puzzle[pos_x][pos_y];
+	puzzle[pos_x][pos_y] = temp;
+
+	this->set_pos_x(pos_x + 1);
+	this->set_move_times(move_times);
+	this->set_puzzle_blocks(puzzle);
+}
+
+void Puzzle::move_left() {
+	int** puzzle = this->get_puzzle_blocks();
+	int temp = 0;
+	int pos_x = this->get_pos_x();
+	int pos_y = this->get_pos_y();
+	int move_times = this->get_move_times();
+	move_times++;
+
+	temp = puzzle[pos_x][pos_y - 1];
+	puzzle[pos_x][pos_y - 1] = puzzle[pos_x][pos_y];
+	puzzle[pos_x][pos_y] = temp;
+
+	this->set_pos_y(pos_y - 1);
+	this->set_move_times(move_times);
+	this->set_puzzle_blocks(puzzle);
+}
+
+void Puzzle::move_right() {
+	int** puzzle = this->get_puzzle_blocks();
+	int temp = 0;
+	int pos_x = this->get_pos_x();
+	int pos_y = this->get_pos_y();
+	int move_times = this->get_move_times();
+	move_times++;
+
+	temp = puzzle[pos_x][pos_y + 1];
+	puzzle[pos_x][pos_y + 1] = puzzle[pos_x][pos_y];
+	puzzle[pos_x][pos_y] = temp;
+
+	this->set_pos_y(pos_y + 1);
+	this->set_move_times(move_times);
+	this->set_puzzle_blocks(puzzle);
 }

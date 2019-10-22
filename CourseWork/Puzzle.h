@@ -10,9 +10,9 @@ public:
 	int get_puzzle_x();
 	void set_puzzle_y(int& puzzle_y);
 	int get_puzzle_y();
-	void set_pos_x(int& pos_x);
+	void set_pos_x(int pos_x);
 	int get_pos_x();
-	void set_pos_y(int& pos_y);
+	void set_pos_y(int pos_y);
 	int get_pos_y();
 	void set_max(int max);
 	int get_max();
@@ -23,16 +23,19 @@ public:
 	void set_move(move_towards move);
 	move_towards get_move();
 
+	void input_puzzle();
+	void random_generate();
+	void print_puzzle();
+	void move_up();
+	void move_down();
+	void move_left();
+	void move_right();
 	int count_continuous_row();
 	int count_continuous_column();
 	int count_reverse_continuous_row();
-	int count_reverse_continuous_column();
-	void print_puzzle();
-	void input_puzzle();
-	void random_generate();
+	int count_reverse_continuous_column();	
 	void push_to_file();
 	void pull_from_file();
-	void movement();
 protected:
 	int puzzle_x;
 	int puzzle_y;
