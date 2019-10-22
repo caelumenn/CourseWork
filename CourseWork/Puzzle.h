@@ -47,5 +47,9 @@ protected:
 	string solution_file;
 	string config_file;
 	move_towards move;
+	Puzzle* up_child;
+	Puzzle* down_child;
+	Puzzle* right_child;
+	Puzzle* left_child;
 };
 

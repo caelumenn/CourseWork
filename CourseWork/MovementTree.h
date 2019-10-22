@@ -7,9 +7,9 @@ private:
 	MovementTree* down_child;
 	MovementTree* right_child;
 	MovementTree* left_child;
-	Puzzle* puzzle;
+	Puzzle puzzle;
 public:
-	MovementTree(Puzzle* puzzle);
+	MovementTree(Puzzle& puzzle);
 	~MovementTree();
 	void insert_movement();
 	void print_tree();
