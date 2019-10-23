@@ -465,3 +465,6 @@ void Puzzle::delete_unvaild_tree(Puzzle& treenode) {
 	}
 }
 
+bool Puzzle::is_turn() {
+
+}
