@@ -2,27 +2,43 @@
 
 int main() {
 	int x = 4, y = 4;
-	Puzzle puzzle;
-	puzzle.set_puzzle_x(x);
-	puzzle.set_puzzle_y(y);
-	puzzle.set_pos_x(3);
-	puzzle.set_pos_y(3);
-	puzzle.set_max(20);
-	puzzle.random_generate();
-	puzzle.print_puzzle();
-	cout << endl;
-	puzzle.move_up();
-	puzzle.print_puzzle();
-	cout << endl;
-	puzzle.up_child = new Puzzle(puzzle);
-	cout << endl;
-	puzzle.up_child->print_puzzle();
-	cout << endl;
-	puzzle.up_child->move_up();
-	puzzle.up_child->print_puzzle();
-	puzzle.up_child->random_generate();
-	puzzle.up_child->print_puzzle();
-	cout << endl;
+	Puzzle root;
+	root.set_puzzle_x(x);
+	root.set_puzzle_y(y);
+	root.set_config_num(3);
+	root.set_pos_x(3);
+	root.set_pos_y(3);
+	root.set_max(20);
+	//puzzle.input_puzzle();
+	root.random_generate();
+	root.set_puzzle_blocks(0);
+	root.new_treenode(root);
+	root.up_child->travel_treenode(root.up_child);
+	//puzzle.set_puzzle_blocks(1);
+	//puzzle.print_puzzle();
+	//puzzle.push_to_file();
+
+
+
+
+
+	//puzzle.random_generate();
+	//puzzle.print_puzzle();
+	//cout << endl;
+	//puzzle.move_up();
+	//puzzle.print_puzzle();
+	//cout << endl;
+	//cout << root.get_move();
+	//root.up_child = new Puzzle(root, move_towards::down);
+	//cout << root.up_child->get_move();
+	//cout << endl;
+	//puzzle.up_child->print_puzzle();
+	//cout << endl;
+	//puzzle.up_child->move_up();
+	//puzzle.up_child->print_puzzle();
+	//puzzle.up_child->random_generate();
+	//puzzle.up_child->print_puzzle();
+	//cout << endl;
 	
 
 	/*
