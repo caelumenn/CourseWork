@@ -11,7 +11,7 @@ Email:destinydy1213@gmail.com
 #include <chrono> 
 using namespace std;
 enum  move_towards {up,down,left,right};
-const int LEVEL = 4;
+const int LEVEL = 10;
 class Puzzle {
 public:	
 	Puzzle* up_child;
@@ -38,7 +38,7 @@ public:
 	int get_max();
 	void set_partial(int partial);
 	int get_partial();
-	void set_move_times(int& move_times);
+	void set_move_times(int move_times);
 	int get_move_times();
 	void set_puzzle_blocks(int** init);
 	void set_puzzle_blocks(int num);
@@ -49,21 +49,21 @@ public:
 	void input_puzzle();
 	void random_generate();
 	void print_puzzle();
-	void move_up(Puzzle& p);
-	void move_down(Puzzle& root);
-	void move_left(Puzzle& root);
-	void move_right(Puzzle& root);
+	void move_up();
+	void move_down();
+	void move_left();
+	void move_right();
 	int count_continuous_row();
 	int count_continuous_column();
 	int count_reverse_continuous_row();
 	int count_reverse_continuous_column();	
 	void push_to_file();
 	void pull_from_file();
-	void write_result();
-	void delete_unvaild_tree();
 	void new_treenode(Puzzle& treenode);
+	void delete_unvaild_tree(Puzzle& treenode);
 	void travel_treenode(Puzzle *root);
-
+	bool is_turn();
+	void write_result();
 protected:
 	int puzzle_x;
 	int puzzle_y;

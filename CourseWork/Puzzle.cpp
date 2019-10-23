@@ -3,7 +3,6 @@ Name:Wenshang Ying
 Email:destinydy1213@gmail.com
 */
 
-
 #include "Puzzle.h"
 
 Puzzle::Puzzle():
@@ -27,8 +26,8 @@ Puzzle::Puzzle(const Puzzle& p ,move_towards move) {
 	this->puzzle_y = p.puzzle_y;
 	this->pos_x = p.pos_x;
 	this->pos_y = p.pos_y;
-	this->move_times = p.move_times;
 	this->max = p.max;
+	this->move_times = p.move_times;
 	this->set_puzzle_blocks(p.puzzle_blocks);
 	this->solution_file = p.solution_file;
 	this->config_file = p.config_file;
@@ -89,7 +88,7 @@ void Puzzle::set_partial(int partial) {
 int Puzzle::get_partial() {
 	return this->partial;
 }
-void Puzzle::set_move_times(int& move_times) {
+void Puzzle::set_move_times(int move_times) {
 	this->move_times = move_times;
 }
 int Puzzle::get_move_times() {
@@ -140,9 +139,15 @@ bool repeat_check(int **arry, int x, int y, int check_num) {
 void Puzzle::input_puzzle() {
 	int input = 0;
 	int num = 0;
-	cout << "Please input how many your numbers of 15-puzzle is:";
+	cout << "How many 15-puzzle configs do you have:";
 	cin >> num;
-	//this->set_config_num(num);
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Wrong! Please input a num." << endl;
+		cin >> num;
+	}
+	this->set_config_num(num);
 	this->init_puzzle_config();
 	for (int k = 0; k < num; k++) {
 		for (int i = 0; i < this->puzzle_y; i++) {
@@ -160,15 +165,17 @@ void Puzzle::input_puzzle() {
 						cout << "Wrong num, please input a num from 1 to " << this->get_max() << endl;
 						j--;
 					}
-					else if (repeat_check(this->puzzle_config[num], this->puzzle_x, this->puzzle_y, input)) {
+					else if (repeat_check(this->puzzle_config[k], this->puzzle_x, this->puzzle_y, input)) {
 						cout << "Already has a " << input << endl;
 						j--;
 					}
 					else {
 						if (i == this->puzzle_y - 1 && j == this->puzzle_x - 1) {
+							cin.clear();
+							cin.ignore(numeric_limits<streamsize>::max(), '\n');
 							this->puzzle_config[k][i][j] = 0;
 							system("CLS");
-							cout << "1 config is completed, please start input next config." << endl;
+							cout << "This config is completed, please start input next config." << endl;
 						}
 						else {
 							this->puzzle_config[k][i][j] = input;
@@ -189,6 +196,7 @@ void Puzzle::print_puzzle() {
 		}
 		cout << endl;
 	}
+	cout << endl;
 }
 
 void Puzzle::random_generate() {
@@ -295,56 +303,49 @@ int Puzzle::count_reverse_continuous_column() {
 	return continuous_reverse_column;
 }
 
-void Puzzle::move_up(Puzzle& treenode){
+void Puzzle::move_up(){
 	int** puzzle = this->get_puzzle_blocks();
 	int temp = 0;
+
 	temp = puzzle[this->pos_x - 1][this->pos_y];
 	puzzle[this->pos_x - 1][this->pos_y] = puzzle[this->pos_x][this->pos_y];
 	puzzle[this->pos_x][this->pos_y] = temp;
 	this->set_pos_x(pos_x - 1);
-	this->set_move_times(move_times);
 	this->set_puzzle_blocks(puzzle);
-
-	this->new_treenode(treenode);
+	this->set_move(move_towards::up);
 }
 
-void Puzzle::move_down(Puzzle& treenode) {
+void Puzzle::move_down() {
 	int** puzzle = this->get_puzzle_blocks();
 	int temp = 0;
 	temp = puzzle[this->pos_x + 1][this->pos_y];
 	puzzle[this->pos_x + 1][this->pos_y] = puzzle[this->pos_x][this->pos_y];
 	puzzle[this->pos_x][this->pos_y] = temp;
 	this->set_pos_x(pos_x + 1);
-	this->set_move_times(move_times);
 	this->set_puzzle_blocks(puzzle);
-
-	this->new_treenode(treenode);
+	this->set_move(move_towards::down);
 }
 
-void Puzzle::move_left(Puzzle& treenode) {
+void Puzzle::move_left() {
 	int** puzzle = this->get_puzzle_blocks();
 	int temp = 0;
 	temp = puzzle[this->pos_x][this->pos_y - 1];
 	puzzle[this->pos_x][this->pos_y - 1] = puzzle[this->pos_x][this->pos_y];
 	puzzle[this->pos_x][this->pos_y] = temp;
 	this->set_pos_y(pos_y - 1);
-	this->set_move_times(move_times);
 	this->set_puzzle_blocks(puzzle);
-
-	this->new_treenode(treenode);
+	this->set_move(move_towards::left);
 }
 
-void Puzzle::move_right(Puzzle& treenode) {
+void Puzzle::move_right() {
 	int** puzzle = this->get_puzzle_blocks();
 	int temp = 0;
 	temp = puzzle[this->pos_x][this->pos_y + 1];
 	puzzle[this->pos_x][this->pos_y + 1] = puzzle[this->pos_x][this->pos_y];
 	puzzle[this->pos_x][this->pos_y] = temp;
 	this->set_pos_y(pos_y + 1);
-	this->set_move_times(move_times);
 	this->set_puzzle_blocks(puzzle);
-
-	this->new_treenode(treenode);
+	this->set_move(move_towards::right);
 }
 
 void Puzzle::push_to_file() {
@@ -381,61 +382,86 @@ void Puzzle::pull_from_file() {
 }
 
 void Puzzle::new_treenode(Puzzle& treenode) {
+	if (this->move_times > LEVEL) {
+		return;
+	}
 	this->move_times++;
-	if (this->up_child == nullptr) {
-		this->up_child = new Puzzle(treenode, move_towards::up);
-		this->up_child->move_up(*(this->up_child));
+	this->delete_unvaild_tree(*this);
+	
+	if (this->up_child != nullptr) {
+		this->up_child->move_up();
+		this->up_child->new_treenode(*this->up_child);
 	}
-	if (this->down_child == nullptr) {
-		this->down_child = new Puzzle(treenode, move_towards::down);
-		this->down_child->move_down(*(this->down_child));
+	if (this->down_child != nullptr) {
+		this->down_child->move_down();
+		this->down_child->new_treenode(*this->down_child);
 	}
-	if (this->left_child == nullptr) {
-		this->left_child = new Puzzle(treenode, move_towards::left);
-		this->left_child->move_left(*(this->left_child));
+	if (this->left_child != nullptr) {
+		this->left_child->move_left();
+		this->left_child->new_treenode(*this->left_child);
 	}
-	if (this->right_child == nullptr) {
-		this->right_child = new Puzzle(treenode, move_towards::right);
-		this->right_child->move_right(*(this->right_child));
+	if (this->right_child != nullptr) {
+		this->right_child->move_right();
+		this->right_child->new_treenode(*this->right_child);
 	}
-	this->delete_unvaild_tree();
 }
 
 void Puzzle::travel_treenode(Puzzle *root) {
-	if (this->move_times >= LEVEL) {
-		return;
+	if (root->up_child != nullptr) {
+		travel_treenode(root->up_child);
+		root->up_child->print_puzzle();
 	}
-	if (this->up_child != nullptr) {
-		travel_treenode(this->up_child);
-		this->print_puzzle();
+	if (root->down_child != nullptr) {
+		travel_treenode(root->down_child);
+		root->down_child->print_puzzle();
 	}
-	if (this->down_child != nullptr) {
-		travel_treenode(this->down_child);
+	if (root->left_child != nullptr) {
+		travel_treenode(root->left_child);
+		root->left_child->print_puzzle();
 	}
-	if (this->left_child != nullptr) {
-		travel_treenode(this->left_child);
-	}
-	if (this->right_child != nullptr) {
-		travel_treenode(this->right_child);
+	if (root->right_child != nullptr) {
+		travel_treenode(root->right_child);
+		root->right_child->print_puzzle();
 	}
 }
 
-void Puzzle::delete_unvaild_tree() {
+void Puzzle::delete_unvaild_tree(Puzzle& treenode) {
+	this->up_child = new Puzzle(treenode, move_towards::up);
+	this->down_child = new Puzzle(treenode, move_towards::down);
+	this->left_child = new Puzzle(treenode, move_towards::left);
+	this->right_child = new Puzzle(treenode, move_towards::right);
 	move_towards move = this->get_move();
-	if (move == move_towards::up) 
+	if (move == move_towards::up) {
 		delete this->down_child;
-	else if (move == move_towards::down) 
+		this->down_child = nullptr;
+	}
+	else if (move == move_towards::down) {
 		delete this->up_child;
-	else if (move == move_towards::left) 
+		this->up_child = nullptr;
+	}
+	else if (move == move_towards::left) {
 		delete this->right_child;
-	else if (move == move_towards::right) 
+		this->right_child = nullptr;
+	}
+	else if (move == move_towards::right) {
 		delete this->left_child;
-	if (this->pos_x == 0) 
+		this->left_child = nullptr;
+	}
+	if (this->pos_x == 0) {
 		delete this->up_child;
-	if (this->pos_y == 0)  
+		this->up_child = nullptr;
+	}
+	if (this->pos_y == 0) {
 		delete this->left_child;
-	if (this->pos_x == this->get_puzzle_x() - 1) 
+		this->left_child = nullptr;
+	}
+	if (this->pos_x == this->get_puzzle_x() - 1 && this->get_move() != move_towards::up) {
 		delete this->down_child;
-	if (this->pos_y == this->get_puzzle_y() - 1) 
+		this->down_child = nullptr;
+	}
+	if (this->pos_y == this->get_puzzle_y() - 1) {
 		delete this->right_child;
+		this->right_child = nullptr;
+	}
 }
+

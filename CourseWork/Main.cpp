@@ -9,11 +9,17 @@ int main() {
 	root.set_pos_x(3);
 	root.set_pos_y(3);
 	root.set_max(20);
-	//puzzle.input_puzzle();
-	root.random_generate();
+	root.input_puzzle();
 	root.set_puzzle_blocks(0);
-	root.new_treenode(root);
-	root.up_child->travel_treenode(root.up_child);
+	root.print_puzzle();
+	root.set_puzzle_blocks(1);
+	root.print_puzzle();
+	//root.random_generate();
+	
+	
+	//root.new_treenode(root);
+	//root.travel_treenode(&root);
+	
 	//puzzle.set_puzzle_blocks(1);
 	//puzzle.print_puzzle();
 	//puzzle.push_to_file();
