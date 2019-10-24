@@ -417,6 +417,7 @@ void Puzzle::push_to_file() {
 }
 
 void Puzzle::pull_from_file() {
+	char buffer;
 	ifstream myfile(config_file);
 	myfile >> this->config_num;
 	this->init_puzzle_config();
@@ -424,9 +425,19 @@ void Puzzle::pull_from_file() {
 		for (int i = 0; i < this->config_num; i++)
 			for (int j = 0; j < this->puzzle_y; j++) {
 				for (int k = 0; k < this->puzzle_x; k++) {
-					myfile >> this->puzzle_config[i][j][k];
+					if (j == this->puzzle_y - 1 && k == this->puzzle_x - 1) {
+						this->puzzle_config[i][j][k] = 0;
+						myfile >> buffer;
+					}
+					else {
+						myfile >> this->puzzle_config[i][j][k];
+					}
 				}
 			}
+	}
+	else {
+		cout << "No " << config_file << endl;
+		system("pause");
 	}
 	myfile.close();
 }
