@@ -53,6 +53,7 @@ public:
 	void set_move(move_towards move);
 	move_towards get_move();
 
+	void puzzle_setting();
 	void input_puzzle();
 	void random_generate();
 	void print_puzzle();
@@ -66,9 +67,9 @@ public:
 	int count_reverse_continuous_column(int** puzzle, int partial);
 	void push_to_file();
 	void pull_from_file();
-	void new_treenode(Puzzle& treenode);
+	void new_tree(Puzzle& treenode);
 	void delete_unvaild_tree(Puzzle& treenode);
-	void travel_treenode(Puzzle *root);
+	void travel_tree(Puzzle *root);
 	bool is_turn();
 	bool check_turn_repeat();
 	void push_turn_set();

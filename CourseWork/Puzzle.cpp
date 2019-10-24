@@ -12,8 +12,8 @@ int Puzzle::four = 0;
 Puzzle::Puzzle() :
 	puzzle_x(4), puzzle_y(4),
 	pos_x(puzzle_x - 1), pos_y(puzzle_y - 1),
-	max(0),
-	config_num(0),
+	max(20),
+	config_num(3),
 	move_times(0),
 	puzzle_blocks(nullptr),
 	solution_file("Solution-File.txt"),config_file("15-File.txt"),
@@ -150,10 +150,11 @@ bool repeat_check(int **arry, int x, int y, int check_num) {
 	return false;
 }
 
-void Puzzle::input_puzzle() {
-	int input = 0;
+void Puzzle::puzzle_setting() {
+	int size = 0;
+	int max = 0;
 	int num = 0;
-	cout << "How many 15-puzzle configs do you have:";
+	cout << "How many configs do you want?" << endl;
 	cin >> num;
 	while (cin.fail()) {
 		cin.clear();
@@ -162,8 +163,41 @@ void Puzzle::input_puzzle() {
 		cin >> num;
 	}
 	this->set_config_num(num);
+
+	cout << "What size?" << endl;
+	cin >> size; 
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Wrong! Please input a num." << endl;
+		cin >> size;
+	}
+	this->set_puzzle_x(size);
+	this->set_puzzle_y(size);
+	this->set_pos_x(size - 1);
+	this->set_pos_y(size - 1);
+
+	cout << "What num dou you want ,to be the Max." << endl;
+	cin >> max;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Wrong! Please input a num." << endl;
+		cin >> max;
+	}
+	while(max < size * size - 1) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Max should larger than the size*size - 1" << endl;
+		cin >> max;
+	}
+	this->set_max(max);
+}
+
+void Puzzle::input_puzzle() {
+	int input = 0;
 	this->init_puzzle_config();
-	for (int k = 0; k < num; k++) {
+	for (int k = 0; k < this->get_config_num(); k++) {
 		for (int i = 0; i < this->puzzle_y; i++) {
 			for (int j = 0; j < this->puzzle_x; j++) {
 				cout << "Please input a num from 1 to " << this->get_max() << endl;
@@ -200,6 +234,7 @@ void Puzzle::input_puzzle() {
 			}
 		}
 	}
+	this->push_to_file();
 }
 
 void Puzzle::print_puzzle() {
@@ -239,6 +274,7 @@ void Puzzle::random_generate() {
 			}
 		}
 	}
+	this->push_to_file();
 }
 
 int Puzzle::count_continuous_row(int** puzzle,int partial) {
@@ -395,7 +431,7 @@ void Puzzle::pull_from_file() {
 	myfile.close();
 }
 
-void Puzzle::new_treenode(Puzzle& treenode) {
+void Puzzle::new_tree(Puzzle& treenode) {
 	if (this->move_times > LEVEL) {
 		return;
 	}
@@ -404,42 +440,42 @@ void Puzzle::new_treenode(Puzzle& treenode) {
 	
 	if (this->up_child != nullptr) {
 		this->up_child->move_up();
-		this->up_child->new_treenode(*this->up_child);
+		this->up_child->new_tree(*this->up_child);
 	}
 	if (this->down_child != nullptr) {
 		this->down_child->move_down();
-		this->down_child->new_treenode(*this->down_child);
+		this->down_child->new_tree(*this->down_child);
 	}
 	if (this->left_child != nullptr) {
 		this->left_child->move_left();
-		this->left_child->new_treenode(*this->left_child);
+		this->left_child->new_tree(*this->left_child);
 	}
 	if (this->right_child != nullptr) {
 		this->right_child->move_right();
-		this->right_child->new_treenode(*this->right_child);
+		this->right_child->new_tree(*this->right_child);
 	}
 }
 
-void Puzzle::travel_treenode(Puzzle *root) {
+void Puzzle::travel_tree(Puzzle *root) {
 	if (root->up_child != nullptr) {
 		if (root->up_child->is_turn()) 
 			root->up_child->push_turn_set();
-		travel_treenode(root->up_child);
+		travel_tree(root->up_child);
 	}
 	if (root->down_child != nullptr) {
 		if (root->down_child->is_turn()) 
 			root->down_child->push_turn_set();
-		travel_treenode(root->down_child);
+		travel_tree(root->down_child);
 	}
 	if (root->left_child != nullptr) {
 		if (root->left_child->is_turn()) 
 			root->left_child->push_turn_set();
-		travel_treenode(root->left_child);
+		travel_tree(root->left_child);
 	}
 	if (root->right_child != nullptr) {
 		if (root->right_child->is_turn()) 
 			root->right_child->push_turn_set();
-		travel_treenode(root->right_child);
+		travel_tree(root->right_child);
 	}
 }
 
