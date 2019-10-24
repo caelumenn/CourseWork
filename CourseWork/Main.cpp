@@ -30,7 +30,7 @@ void write_result(Puzzle& puzzle) {
 		}
 	}
 	myfile.close();
-	cout << "Thr result has written in the Solution-File." << endl;
+	cout << "The result has written in the Solution-File." << endl;
 	system("pause");
 }
 void Menu() {
