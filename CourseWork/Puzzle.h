@@ -11,7 +11,10 @@ Email:destinydy1213@gmail.com
 #include <chrono> 
 using namespace std;
 enum  move_towards {up,down,left,right};
-const int LEVEL = 10;
+const int LEVEL = 16;
+static vector<int**> puzzle_turn_set;
+
+
 class Puzzle {
 public:	
 	Puzzle* up_child;
@@ -19,6 +22,12 @@ public:
 	Puzzle* right_child;
 	Puzzle* left_child;
 	int*** puzzle_config;
+	string solution_file;
+	string config_file;
+	static int two;
+	static int three;
+	static int four;
+	
 
 	Puzzle();
 	Puzzle(const Puzzle& p, move_towards move);
@@ -36,8 +45,6 @@ public:
 	int get_config_num();
 	void set_max(int max);
 	int get_max();
-	void set_partial(int partial);
-	int get_partial();
 	void set_move_times(int move_times);
 	int get_move_times();
 	void set_puzzle_blocks(int** init);
@@ -53,16 +60,21 @@ public:
 	void move_down();
 	void move_left();
 	void move_right();
-	int count_continuous_row();
-	int count_continuous_column();
-	int count_reverse_continuous_row();
-	int count_reverse_continuous_column();	
+	int count_continuous_row(int** puzzle, int partial);
+	int count_continuous_column(int** puzzle, int partial);
+	int count_reverse_continuous_row(int** puzzle, int partial);
+	int count_reverse_continuous_column(int** puzzle, int partial);
 	void push_to_file();
 	void pull_from_file();
 	void new_treenode(Puzzle& treenode);
 	void delete_unvaild_tree(Puzzle& treenode);
 	void travel_treenode(Puzzle *root);
 	bool is_turn();
+	bool check_turn_repeat();
+	void push_turn_set();
+	void count_result(int partial);
+	void count_result();
+	int count_result_partial(int** puzzle, int partial);
 	void write_result();
 protected:
 	int puzzle_x;
@@ -72,11 +84,9 @@ protected:
 	int config_num;
 	int move_times;
 	int max;
-	int partial;
 
 	int** puzzle_blocks;
 	
-	string solution_file;
-	string config_file;
+
 	move_towards move;
 };

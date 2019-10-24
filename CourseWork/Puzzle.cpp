@@ -5,15 +5,18 @@ Email:destinydy1213@gmail.com
 
 #include "Puzzle.h"
 
-Puzzle::Puzzle():
-	puzzle_x(0),puzzle_y(0),
-	pos_x(0), pos_y(0),
+int Puzzle::two = 0;
+int Puzzle::three = 0;
+int Puzzle::four = 0;
+
+Puzzle::Puzzle() :
+	puzzle_x(4), puzzle_y(4),
+	pos_x(puzzle_x - 1), pos_y(puzzle_y - 1),
 	max(0),
-	partial(0),
 	config_num(0),
 	move_times(0),
 	puzzle_blocks(nullptr),
-	solution_file("the Solution-File.txt"),config_file("the 15-File.txt"),
+	solution_file("Solution-File.txt"),config_file("15-File.txt"),
 	move(up),
 	up_child(nullptr),
 	down_child(nullptr),
@@ -34,6 +37,22 @@ Puzzle::Puzzle(const Puzzle& p ,move_towards move) {
 	this->move = move;
 }
 Puzzle::~Puzzle() {
+	if (this->up_child != nullptr) {
+		delete this->up_child;
+		this->up_child = nullptr;
+	}
+	if (this->down_child != nullptr) {
+		delete this->down_child;
+		this->down_child = nullptr;
+	}
+	if (this->right_child != nullptr) {
+		delete this->right_child;
+		this->right_child = nullptr;
+	}
+	if (this->left_child != nullptr) {
+		delete this->left_child;
+		this->left_child = nullptr;
+	}
 	delete[] puzzle_blocks;
 	delete[] puzzle_config;
 }
@@ -81,12 +100,6 @@ void Puzzle::set_max(int max) {
 }
 int Puzzle::get_max() {
 	return this->max;
-}
-void Puzzle::set_partial(int partial) {
-	this->partial = partial;
-}
-int Puzzle::get_partial() {
-	return this->partial;
 }
 void Puzzle::set_move_times(int move_times) {
 	this->move_times = move_times;
@@ -136,6 +149,7 @@ bool repeat_check(int **arry, int x, int y, int check_num) {
 	}
 	return false;
 }
+
 void Puzzle::input_puzzle() {
 	int input = 0;
 	int num = 0;
@@ -189,14 +203,18 @@ void Puzzle::input_puzzle() {
 }
 
 void Puzzle::print_puzzle() {
-	int** puzzle = this->get_puzzle_blocks();
-	for (int i = 0; i < this->puzzle_y; i++) {
-		for (int j = 0; j < this->puzzle_x; j++) {
-			cout << puzzle[i][j] << "\t"; 
+	ofstream myfile(this->solution_file, ios::app);
+	if (myfile.is_open()) {
+		int** puzzle = this->get_puzzle_blocks();
+		for (int i = 0; i < this->puzzle_y; i++) {
+			for (int j = 0; j < this->puzzle_x; j++) {
+				myfile << puzzle[i][j] << "\t";
+			}
+			myfile << endl;
 		}
-		cout << endl;
+		myfile << endl;
 	}
-	cout << endl;
+	myfile.close();
 }
 
 void Puzzle::random_generate() {
@@ -223,15 +241,14 @@ void Puzzle::random_generate() {
 	}
 }
 
-int Puzzle::count_continuous_row() {
-	int** puzzle = this->get_puzzle_blocks();
+int Puzzle::count_continuous_row(int** puzzle,int partial) {
 	int continuous_row = 0;
-	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+	for (int i = 0; i < this->get_puzzle_y(); i++) {
 		int count = 0;
 		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
 			if (puzzle[i][j + 1] - puzzle[i][j] == 1) {
 				count++;
-				if (count >= this->partial - 1) {
+				if (count >= partial - 1) {
 					continuous_row++;
 				}
 			}
@@ -243,15 +260,14 @@ int Puzzle::count_continuous_row() {
 	return continuous_row;
 }
 
-int Puzzle::count_reverse_continuous_row() {
-	int** puzzle = this->get_puzzle_blocks();
+int Puzzle::count_reverse_continuous_row(int** puzzle, int partial) {
 	int continuous_reverse_row = 0;
-	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+	for (int i = 0; i < this->get_puzzle_y(); i++) {
 		int count = 0;
 		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
 			if (puzzle[i][j + 1] - puzzle[i][j] == -1) {
 				count++;
-				if (count >= this->partial - 1) {
+				if (count >= partial - 1) {
 					continuous_reverse_row++;
 				}
 			}
@@ -263,15 +279,14 @@ int Puzzle::count_reverse_continuous_row() {
 	return continuous_reverse_row;
 }
 
-int Puzzle::count_continuous_column() {
-	int** puzzle = this->get_puzzle_blocks();
+int Puzzle::count_continuous_column(int** puzzle, int partial) {
 	int continuous_column = 0;
-	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+	for (int i = 0; i < this->get_puzzle_y(); i++) {
 		int count = 0;
 		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
 			if (puzzle[j+1][i] - puzzle[j][i] == 1) {
 				count++;
-				if (count >= this->partial - 1) {
+				if (count >= partial - 1) {
 					continuous_column++;
 				}
 			}
@@ -283,15 +298,14 @@ int Puzzle::count_continuous_column() {
 	return continuous_column;
 }
 
-int Puzzle::count_reverse_continuous_column() {
-	int** puzzle = this->get_puzzle_blocks();
+int Puzzle::count_reverse_continuous_column(int** puzzle, int partial) {
 	int continuous_reverse_column = 0;
-	for (int i = 0; i < this->get_puzzle_y() - 1; i++) {
+	for (int i = 0; i < this->get_puzzle_y(); i++) {
 		int count = 0;
 		for (int j = 0; j < this->get_puzzle_x() - 1; j++) {
 			if (puzzle[j + 1][i] - puzzle[j][i] == -1) {
 				count++;
-				if (count >= this->partial - 1) {
+				if (count >= partial - 1) {
 					continuous_reverse_column++;
 				}
 			}
@@ -408,20 +422,24 @@ void Puzzle::new_treenode(Puzzle& treenode) {
 
 void Puzzle::travel_treenode(Puzzle *root) {
 	if (root->up_child != nullptr) {
+		if (root->up_child->is_turn()) 
+			root->up_child->push_turn_set();
 		travel_treenode(root->up_child);
-		root->up_child->print_puzzle();
 	}
 	if (root->down_child != nullptr) {
+		if (root->down_child->is_turn()) 
+			root->down_child->push_turn_set();
 		travel_treenode(root->down_child);
-		root->down_child->print_puzzle();
 	}
 	if (root->left_child != nullptr) {
+		if (root->left_child->is_turn()) 
+			root->left_child->push_turn_set();
 		travel_treenode(root->left_child);
-		root->left_child->print_puzzle();
 	}
 	if (root->right_child != nullptr) {
+		if (root->right_child->is_turn()) 
+			root->right_child->push_turn_set();
 		travel_treenode(root->right_child);
-		root->right_child->print_puzzle();
 	}
 }
 
@@ -466,5 +484,89 @@ void Puzzle::delete_unvaild_tree(Puzzle& treenode) {
 }
 
 bool Puzzle::is_turn() {
+	int ** turn = this->get_puzzle_blocks();
+	if (turn[this->get_puzzle_y() - 1][this->get_puzzle_x() - 1] == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
 
+void Puzzle::push_turn_set() {
+	if (this->check_turn_repeat()) 
+		puzzle_turn_set.push_back(this->puzzle_blocks);
+}
+
+bool Puzzle::check_turn_repeat() {
+	if (puzzle_turn_set.size() == 0) {
+		return true;
+	}
+	else {
+		for (auto iterator = puzzle_turn_set.begin(); iterator != puzzle_turn_set.end(); iterator++) {
+			for (int i = 0; i < this->puzzle_y; i++) {
+				for (int j = 0; j < this->puzzle_x; j++) {
+					if (this->puzzle_blocks[i][j] == *iterator[i][j]) {
+						continue;
+					}
+					else {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+}
+
+void Puzzle::count_result(int partial) {
+	int con_row = 0;
+	int con_column = 0;
+	int r_con_row = 0;
+	int r_con_column = 0;
+	ofstream myfile(this->solution_file, ios::app);
+	if(myfile.is_open()){
+		for (auto iterator = puzzle_turn_set.begin(); iterator != puzzle_turn_set.end(); iterator++) {
+			int** turn = *iterator;
+			con_row += this->count_continuous_row(turn, partial);
+			con_column += this->count_continuous_column(turn, partial);
+			r_con_row += this->count_reverse_continuous_row(turn, partial);
+			r_con_column += this->count_reverse_continuous_column(turn, partial);
+		}
+		myfile << "row = " << con_row << endl;
+		myfile << "column = " << con_column << endl;
+		myfile << "reverse row = " << r_con_row << endl;
+		myfile << "reverse column = " << r_con_column << endl;
+	}
+	myfile.close();
+}
+
+void Puzzle::count_result() {
+	two = 0;
+	three = 0;
+	four = 0;
+	ofstream myfile(this->solution_file , ios::app);
+	if (myfile.is_open()) {
+		for (auto iterator = puzzle_turn_set.begin(); iterator != puzzle_turn_set.end(); iterator++) {
+			int** turn = *iterator;
+			two += this->count_result_partial(turn, 2);
+			three += this->count_result_partial(turn, 3);
+			four += this->count_result_partial(turn, 4);
+		}
+		myfile << "(total for row&column, including reverse, for the turns I found)" << endl;
+		myfile << "2 = " << two << endl;
+		myfile << "3 = " << three << endl;
+		myfile << "4 = " << four << endl;
+		myfile << endl;
+	}
+	myfile.close();
+}
+
+int Puzzle::count_result_partial(int**puzzle,int partial) {
+	int result = 0;
+	result += this->count_continuous_row(puzzle, partial);
+	result += this->count_continuous_column(puzzle, partial);
+	result += this->count_reverse_continuous_row(puzzle, partial);
+	result += this->count_reverse_continuous_column(puzzle, partial);
+	return result;
 }

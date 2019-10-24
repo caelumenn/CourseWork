@@ -1,70 +1,76 @@
 #include "Puzzle.h"
 
+Puzzle puzzle_setting() {
+	Puzzle puzzle;
+	return puzzle;
+}
+
+void Menu() {
+	Puzzle puzzle;
+	bool is_continue = true;
+	while (is_continue) {
+		puzzle_turn_set.clear();
+		int choice = 0;
+		cout << "<<<<<<<<<<<<<<<<<<<<<< n-Puzzle <<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+		cout << "Please input your choice:" << endl;
+		cout << "1.Setting the Puzzle." << endl;
+		cout << "2.input your Puzzle." << endl;
+		cout << "3.Random generate your Puzzle config." << endl;
+		cout << "4.Count result." << endl;
+		cin >> choice;
+		switch (choice) {
+		case 1:
+			puzzle = puzzle_setting();
+			break;
+		case 2:
+			puzzle.input_puzzle();
+			break;
+		case 3:
+			puzzle.random_generate();
+			break;
+		case 4:
+			break;
+		default:
+			cout << "Please input the correct num." << endl;
+		}
+		cout << "Do you want to continue? y/n" << endl;
+		char answer;
+		cin >> answer;
+		if (answer != 'y' && answer != 'Y') {
+			is_continue = false;
+		}
+	}
+}
+
 int main() {
-	int x = 4, y = 4;
 	Puzzle root;
-	root.set_puzzle_x(x);
-	root.set_puzzle_y(y);
 	root.set_config_num(3);
-	root.set_pos_x(3);
-	root.set_pos_y(3);
-	root.set_max(20);
-	root.input_puzzle();
-	root.set_puzzle_blocks(0);
-	root.print_puzzle();
-	root.set_puzzle_blocks(1);
-	root.print_puzzle();
-	//root.random_generate();
-	
-	
-	//root.new_treenode(root);
-	//root.travel_treenode(&root);
-	
-	//puzzle.set_puzzle_blocks(1);
-	//puzzle.print_puzzle();
-	//puzzle.push_to_file();
+	root.set_max(15);
+	root.random_generate();
+	ofstream myfile(root.solution_file, ios::app);
+	if (myfile.is_open()) {
+		for (int i = 0; i < root.get_config_num(); i++) {
 
+			root.set_puzzle_blocks(i);
+			root.new_treenode(root);
+			root.travel_treenode(&root);
+			myfile << i + 1 << endl;
+			root.print_puzzle();
+			root.count_result(4);
 
+			int two;
+			int three;
+			int four;
+			two = root.count_result_partial(root.get_puzzle_blocks(), 2);
+			three = root.count_result_partial(root.get_puzzle_blocks(), 3);
+			four = root.count_result_partial(root.get_puzzle_blocks(), 4);
 
+			myfile << "(total for row&column, including reverse, in this configuration)" << endl;
+			myfile << "2 = " << two << endl << "3 = " << three << endl << "4 = " << four << endl;
+			root.count_result();
 
-
-	//puzzle.random_generate();
-	//puzzle.print_puzzle();
-	//cout << endl;
-	//puzzle.move_up();
-	//puzzle.print_puzzle();
-	//cout << endl;
-	//cout << root.get_move();
-	//root.up_child = new Puzzle(root, move_towards::down);
-	//cout << root.up_child->get_move();
-	//cout << endl;
-	//puzzle.up_child->print_puzzle();
-	//cout << endl;
-	//puzzle.up_child->move_up();
-	//puzzle.up_child->print_puzzle();
-	//puzzle.up_child->random_generate();
-	//puzzle.up_child->print_puzzle();
-	//cout << endl;
-	
-
-	/*
-	int a = puzzle->count_continuous_row();
-	int b = puzzle->count_reverse_continuous_row();
-	int c = puzzle->count_continuous_column();
-	int d = puzzle->count_reverse_continuous_column();
-	cout << a << endl << b << endl << c << endl << d;
-	puzzle->move_up();
-	puzzle->print_puzzle();
-	puzzle->move_left();
-	puzzle->print_puzzle();
-	puzzle->move_down();
-	puzzle->print_puzzle();
-	puzzle->move_right();
-	puzzle->print_puzzle();
-	cout << puzzle->get_move_times();*/
-	//move_towards move = move_towards::left;
-	//puzzle.set_move(move);
-	//MovementTree* tree = new MovementTree(puzzle);
-	//tree->insert_movement();
+		}	
+	}
+	myfile.close();
 	return 0;
 }
