@@ -1,3 +1,8 @@
+/*
+Name:Wenshang Ying
+Email:destinydy1213@gmail.com
+*/
+
 #include "Puzzle.h"
 
 Puzzle puzzle_setting() {

@@ -2,6 +2,7 @@
 Name:Wenshang Ying
 Email:destinydy1213@gmail.com
 */
+
 #pragma once
 #include <fstream>
 #include <iostream>
@@ -27,7 +28,6 @@ public:
 	static int two;
 	static int three;
 	static int four;
-	
 
 	Puzzle();
 	Puzzle(const Puzzle& p, move_towards move);
@@ -75,7 +75,6 @@ public:
 	void count_result(int partial);
 	void count_result();
 	int count_result_partial(int** puzzle, int partial);
-	void write_result();
 protected:
 	int puzzle_x;
 	int puzzle_y;
@@ -86,7 +85,5 @@ protected:
 	int max;
 
 	int** puzzle_blocks;
-	
-
 	move_towards move;
 };
